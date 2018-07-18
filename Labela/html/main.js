@@ -73,7 +73,12 @@ function yesClicked() {
 }
 
 function noClicked() {
-    currentImage.label = "no"
+    currentImage.label = "no";
+    updateImageLabel(currentImage);
+}
+
+function badClicked() {
+    currentImage.label = "skip";
     updateImageLabel(currentImage);
 }
 
@@ -96,11 +101,13 @@ var questionTextElement = document.getElementById('question_header_text');
 var imageElement = document.getElementById('image');
 var yesButtonElement = document.getElementById('yes_button');
 var noButtonElement = document.getElementById('no_button');
+var badButtonElement = document.getElementById('bad_button');
 
 yesButtonElement.addEventListener('click', yesClicked);
 noButtonElement.addEventListener('click', noClicked);
-document.onkeydown = checkKey;
+badButtonElement.addEventListener('click', badClicked);
 imageElement.addEventListener('error', imageFailed);
+document.onkeydown = checkKey;
 
 var currentImage;
 var imagesToLabel = [];
