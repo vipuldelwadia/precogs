@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Labela | crowdsourced image labelling platform</title>
+        <meta name="description" content="Make others your data creation slaves">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <header>
+            <h1 id="question_header_text"></h1>
+        </header>
+        <div id="image_container">
+            <img id="image" alt="Fetching image... like a good boy" src=""/>
+        </div>
+        <div id="yes_no_answer_container">
+            <div id="no_button" class="yes_no_button"><h3>NO</h3></div>
+            <div id="yes_button" class="yes_no_button right_align"><h3>YES</h3></div>
+        </div>
+        
+        <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
+
+        <!-- Add additional services that you want to use -->
+        <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-database.js"></script>
+                <script>
+          // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyAm-cO9zxkh41mAsCS2Xx9wEjBjWMKkJuA",
+                authDomain: "labela-f3d19.firebaseapp.com",
+                databaseURL: "https://labela-f3d19.firebaseio.com",
+                projectId: "labela-f3d19",
+                storageBucket: "",
+                messagingSenderId: "49325511425"
+            };
+            firebase.initializeApp(config);
+        </script>
+        <script src="./main.js"></script>
+        
+    </body>
+</html>
+
+
+
