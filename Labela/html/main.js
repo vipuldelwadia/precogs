@@ -13,8 +13,8 @@ function loadImagesToLabel() {
         addImageToLabel(snap.key, data.url, data.label);
     };
 
-    firebase.database().ref('/images/').orderByChild('label').equalTo('').limitToLast(10).on('child_changed', callback);
-    firebase.database().ref('/images/').orderByChild('label').equalTo('').limitToLast(10).on('child_added', callback);
+ firebase.database().ref('/images/').limitToLast(20).on('child_changed', callback);
+    firebase.database().ref('/images/').orderByChild('label').equalTo('').limitToLast(20).on('child_added', callback);
 }
   
 function addImageToLabel(name, url, label) {
@@ -64,6 +64,9 @@ function checkKey(e) {
     }
     else if (e.keyCode == '39') { // Right cursor pressed.
        yesClicked();
+    }
+    else if (e.keyCode == '83') { // 'S' pressed
+       badClicked();
     }
 }
 
