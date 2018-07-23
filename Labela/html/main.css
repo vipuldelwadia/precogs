@@ -67,6 +67,11 @@ header {
     margin: 5px;
     flex-grow: 4;
     min-width: 300px;
+    cursor: pointer;
+}
+
+.secondary_button {
+    cursor: pointer;
 }
 
 #no_button:active {
