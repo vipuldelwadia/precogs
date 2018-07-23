@@ -8,6 +8,14 @@ function loadConfig() {
 }
 
 function loadImagesToLabel() {
+    firebase.database().ref('/images/').orderByChild('label').equalTo('').limitToFirst(1).once('value').then(function(snapshot) {
+      if (!snapshot.exists()) {
+          imageElement.src = weAreAllDoneImageUrl;
+          updateRemainingWorkCount();
+          return;
+      }
+    });
+    
     var callback = function(snap) {
         var data = snap.val();
         addImageToLabel(snap.key, data.url, data.label);
@@ -38,6 +46,7 @@ function addImageToLabel(name, url, label) {
             if (image.name == name) {
                 // remove this image from the todo list as someone else bet us to it.
                 imagesToLabel.splice(entry, 1);
+                break;
             }
         }
     }
@@ -45,7 +54,7 @@ function addImageToLabel(name, url, label) {
 }
 
 function updateCurrentImage() {
-    currentImage = randomPop(imagesToLabel); //imagesToLabel.pop();
+    currentImage = randomPop(imagesToLabel);
     if (currentImage) {
         imageElement.src = currentImage.url;
     }
@@ -76,43 +85,60 @@ function checkKey(e) {
     }
 }
 
+function backClicked() {
+    if (labelledImagesHistory.length > 0) {
+        currentImage = labelledImagesHistory.pop();
+        imageElement.src = currentImage.url;
+    }
+    else {
+        alert("There aren't any more images back here.");
+    }
+}
+
 function yesClicked() {
     currentImage.label = "yes";
     updateImageLabel(currentImage);
+    labelledImagesHistory.push(currentImage);
+    updateCurrentImage();
 }
 
 function noClicked() {
     currentImage.label = "no";
     updateImageLabel(currentImage);
+    labelledImagesHistory.push(currentImage);
+    updateCurrentImage();
 }
 
 function badClicked() {
     currentImage.label = "skip";
     updateImageLabel(currentImage);
+    labelledImagesHistory.push(currentImage);
+    updateCurrentImage();
 }
 
 function updateImageLabel(image) {
-    firebase.database().ref('/images/' + image.name).child('label')
-    .set(image.label);
-    
-    // Now we have to load the next image to label.
-    updateCurrentImage();
+    firebase.database().ref('/images/' + image.name).child('label').set(image.label);
 }
 
 function imageFailed(event) {
     currentImage.label = "missing";
     updateImageLabel(currentImage);
+    
     updateCurrentImage();
 }
+
+var weAreAllDoneImageUrl = "images/yay.gif";
 
 // Shortcuts to DOM Elements.
 var questionTextElement = document.getElementById('question_header_text');
 var imageElement = document.getElementById('image');
+var backButtonElement = document.getElementById('back_button');
 var yesButtonElement = document.getElementById('yes_button');
 var noButtonElement = document.getElementById('no_button');
 var badButtonElement = document.getElementById('bad_button');
 var remainingWorkCountElement = document.getElementById('remaining_work_count');
 
+backButtonElement.addEventListener('click', backClicked);
 yesButtonElement.addEventListener('click', yesClicked);
 noButtonElement.addEventListener('click', noClicked);
 badButtonElement.addEventListener('click', badClicked);
@@ -121,6 +147,7 @@ document.onkeydown = checkKey;
 
 var currentImage;
 var imagesToLabel = [];
+var labelledImagesHistory = [];
 
 loadConfig();
 loadImagesToLabel();

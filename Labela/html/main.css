@@ -42,13 +42,6 @@ header {
 
 #bad_button {
     background-color: white;
-    color: #279be9;
-    text-align: center;
-    line-height: 50px;
-    margin: 5px;
-    min-width: 100px;
-    flex-grow: 1;
-    border: 1px solid #279be9;
 }
 
 #no_button {
@@ -63,15 +56,31 @@ header {
     background-color: darkseagreen;
     color: white;
     text-align: center;
-    line-height: 50px;
     margin: 5px;
     flex-grow: 4;
     min-width: 300px;
     cursor: pointer;
+    line-height: 50px;
 }
 
 .secondary_button {
+    color: #279be9;
+    text-align: center;
+    line-height: 50px;
+    margin: 5px;
+    min-width: 100px;
+    flex-grow: 1;
+    border: 1px solid #279be9;
     cursor: pointer;
+}
+
+.image_button {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.image_button img {
+    max-height: 100px;
 }
 
 #no_button:active {
