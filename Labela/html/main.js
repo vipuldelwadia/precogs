@@ -13,8 +13,8 @@ function loadImagesToLabel() {
         addImageToLabel(snap.key, data.url, data.label);
     };
 
- firebase.database().ref('/images/').limitToLast(20).on('child_changed', callback);
-    firebase.database().ref('/images/').orderByChild('label').equalTo('').limitToLast(20).on('child_added', callback);
+    firebase.database().ref('/images/').on('child_changed', callback);
+    firebase.database().ref('/images/').orderByChild('label').equalTo('').on('child_added', callback);
 }
   
 function addImageToLabel(name, url, label) {
@@ -32,15 +32,16 @@ function addImageToLabel(name, url, label) {
         }
     } 
     else {
+        var entry;
         for (entry in imagesToLabel) {
-            var index = entry[0];
-            var image = entry[1];
+            var image = imagesToLabel[entry];
             if (image.name == name) {
                 // remove this image from the todo list as someone else bet us to it.
-                imagesToLabel.splice(index, 1);
+                imagesToLabel.splice(entry, 1);
             }
         }
     }
+    updateRemainingWorkCount();
 }
 
 function updateCurrentImage() {
@@ -48,6 +49,11 @@ function updateCurrentImage() {
     if (currentImage) {
         imageElement.src = currentImage.url;
     }
+    updateRemainingWorkCount();
+}
+
+function updateRemainingWorkCount() {
+    remainingWorkCountElement.innerHTML = "" + imagesToLabel.length;
 }
 
 function randomPop(array) {
@@ -105,6 +111,7 @@ var imageElement = document.getElementById('image');
 var yesButtonElement = document.getElementById('yes_button');
 var noButtonElement = document.getElementById('no_button');
 var badButtonElement = document.getElementById('bad_button');
+var remainingWorkCountElement = document.getElementById('remaining_work_count');
 
 yesButtonElement.addEventListener('click', yesClicked);
 noButtonElement.addEventListener('click', noClicked);

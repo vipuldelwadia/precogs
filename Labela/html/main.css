@@ -76,3 +76,14 @@ header {
 #yes_button:active {
     background-color: #FFCB4F;
 }
+
+#remaining_work_container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#remaining_work_container span {
+    color: black;
+    font-size: 60px;
+    font-weight: 400;
+}
