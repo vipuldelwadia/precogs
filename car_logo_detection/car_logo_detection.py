@@ -10,11 +10,11 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras import backend as K
-from keras.preprocessing import image
 from sklearn.metrics import confusion_matrix
+from PIL import Image
+
 import matplotlib.pyplot as plt
 import itertools
-from PIL import Image
 import numpy as np
 import glob
 
@@ -32,7 +32,7 @@ model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(64, (3, 3)))
+model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -43,7 +43,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
 model.add(Dense(64))
 model.add(Activation('relu'))
-model.add(Dropout(0.6))
+model.add(Dropout(0.8))
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
@@ -57,15 +57,8 @@ model.compile(loss='binary_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-
-"""
-Lets go through and test our model on a fresh dataset to
-find out whether it prefers logos or no logos.
-For this I am going to use a confusion matrix.
-"""
-
-arrayOfLogoImagePaths = glob.glob("./listings/logo/*.jpg")
-arrayOfNoLogoImagePaths = glob.glob("./listings/no_logo/*.jpg")
+arrayOfLogoImagePaths = glob.glob('./dataset/test/with_logos/*jpg')
+arrayOfNoLogoImagePaths = glob.glob('./dataset/test/no_logos/*jpg')
 
 y_true = [1] * len(arrayOfLogoImagePaths) + [0] * len(arrayOfNoLogoImagePaths)
 y_pred = []
@@ -75,11 +68,11 @@ for i, imagePath in enumerate(arrayOfLogoImagePaths + arrayOfNoLogoImagePaths):
     img = Image.open(imagePath)
     
     if img.size != target_size:
-        #img.thumbnail(target_size, Image.ANTIALIAS) # resizes while maintining aspect ratio.
         img = img.resize(target_size)
-        
-    x = image.img_to_array(img)
+
+    x = np.asanyarray(img)
     x = np.expand_dims(x, axis=0)
+    
     prediction = model.predict(x)
     y_pred.append(int(prediction[0][0]))
     
@@ -145,18 +138,3 @@ print(newline)
 print("How often does the yes condition actually occur in our sample?")
 print("prevalance: " + str((real_true/total)))
 print(newline)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
