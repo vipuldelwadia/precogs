@@ -30,7 +30,6 @@ def invoke(model, input_file):
         return model.predict(x)
 
 def load_model(weights_file):
-    
     if K.image_data_format() == 'channels_first':
         input_shape = (3, img_width, img_height)
     else:
@@ -42,7 +41,7 @@ def load_model(weights_file):
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(64, (3, 3)))
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -53,7 +52,7 @@ def load_model(weights_file):
     model.add(Flatten())
     model.add(Dense(64))
     model.add(Activation('relu'))
-    model.add(Dropout(0.6))
+    model.add(Dropout(0.8))
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
