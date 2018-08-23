@@ -11,6 +11,13 @@ from PIL import Image
 import numpy as np
 from flask import Flask, request, jsonify
 
+import os
+import sys
+import json
+import requests
+import tempfile
+from io import BytesIO
+
 # dimensions of our images.
 img_width, img_height = 100, 100
 target_size = (img_width, img_height)
@@ -63,9 +70,36 @@ def load_model(weights_file):
     global graph
     graph = tf.get_default_graph()
 
+def downloadImage(imageUrl):
+    buffer = tempfile.SpooledTemporaryFile(max_size=1e9)
+    response = requests.get(imageUrl, stream=True)
+
+    if response.status_code == 200:
+        downloaded = 0
+        #filesize = int(response.headers['content-length'])
+
+        for chunk in response.iter_content():
+            downloaded += len(chunk)
+            buffer.write(chunk)
+
+        buffer.seek(0)
+        return BytesIO(buffer.read())
+
 load_model('weights.h5')
 
 app = Flask(__name__)
+
+@app.route('/v1/predictImage', methods=['GET'])
+def _predictId():
+    imageId = request.args.get('id')
+    image = downloadImage('https://trademe.tmcdn.co.nz/photoserver/full/' +
+                          imageId + '.jpg')
+    result = invoke(model=model, input_file=image)
+    return jsonify({
+        'imageId': imageId,
+        'hasLogo': True if int(result[0][0]) == 1 else
+        False  # convert numpy float to python float
+    })
 
 @app.route('/v1/predict', methods=['POST'])
 def _predict():
